@@ -1,10 +1,19 @@
 const db = require("../server/db");
-
+const moment = require("moment")
 const { Student } = require("../server/db/models");
 
 async function seed() {
   await db.sync({ force: true });
   console.log("Database has been synced");
+
+  const studentOne = await Student.create({
+    firstName: "Johnny",
+    lastName: "Vazquez",
+    dateOfBirth: moment(new Date).format("YYYY-MM-DD") ,
+    address: "28 S Maple",
+    enrollmentStatus: "active",
+    enrollmentDate: moment(new Date).format("YYYY-MM-DD"),
+  });
 }
 
 async function runSeed() {
@@ -20,4 +29,8 @@ async function runSeed() {
     await db.close();
     console.log("DB CONNECTION HAS CLOSED");
   }
+}
+
+if (module === require.main) {
+  runSeed();
 }
