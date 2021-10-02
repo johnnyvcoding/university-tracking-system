@@ -11,6 +11,8 @@ const databasePassword = process.env.DB_PASSWORD || "password";
 const db = new Sequelize(databaseName, databaseUsername, databasePassword, {
   host: "localhost",
   dialect: "postgres",
+  logging: false
 });
 
 
+module.exports = db
