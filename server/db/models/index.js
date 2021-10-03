@@ -37,4 +37,5 @@ module.exports = {
   Professor,
   Course,
   User,
+  StudentCourse
 };

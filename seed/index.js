@@ -1,6 +1,6 @@
 const db = require("../server/db");
 const moment = require("moment")
-const { Student, User } = require("../server/db/models");
+const { Student, User, Course, StudentCourse, Professor } = require("../server/db/models");
 
 async function seed() {
   await db.sync({ force: true });
@@ -23,6 +23,25 @@ async function seed() {
     email: "jdoe@mail.com",
     password: "123"
   })
+
+  const professorOne = await Professor.create({
+    firstName: "Chris",
+    lastName: "Mallan",
+    address: "33 Butrick St",
+
+  })
+
+
+  const courseOne = await Course.create({
+      name: "Math 120",
+      description: "Algebra 2",
+
+  })
+
+  await professorOne.addCourse(courseOne)
+
+  await studentOne.addCourse(courseOne)
+
 
 
 }
