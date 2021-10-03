@@ -4,9 +4,11 @@ const Sequelize = require("sequelize")
 const Student = require("./student")
 const Professor = require("./professor")
 const Course = require("./course")
+const User = require("./user")
 
 module.exports = {
     Student,
     Professor,
-    Course
+    Course,
+    User
 }

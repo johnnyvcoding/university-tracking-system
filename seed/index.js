@@ -1,6 +1,6 @@
 const db = require("../server/db");
 const moment = require("moment")
-const { Student } = require("../server/db/models");
+const { Student, User } = require("../server/db/models");
 
 async function seed() {
   await db.sync({ force: true });
@@ -14,6 +14,17 @@ async function seed() {
     enrollmentStatus: "active",
     enrollmentDate: moment(new Date).format("YYYY-MM-DD"),
   });
+
+
+  const userOne = await User.create({
+    firstName: "John",
+    lastName: "Doe",
+    isAdmin: true,
+    email: "jdoe@mail.com",
+    password: "123"
+  })
+
+
 }
 
 async function runSeed() {
