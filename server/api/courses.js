@@ -1,6 +1,17 @@
 const router = require("express").Router();
 const { Course } = require("../db/models");
 
+
+// this function will return all the query strings that were present
+// this makes dynamic searching much easier in case we dont have
+// all the paramaters 
+/* 
+example /?firstName=John 
+    the func will only return an object with the following:
+    {
+        firstName: "John"
+    }
+*/
 function returnQueryParamsObject(query) {
   let queryObj = {};
 
