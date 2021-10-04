@@ -76,7 +76,7 @@ router.post("/", async (req, res, next) => {
       },
     });
 
-    return res.set({ "x-organization": "Skyline" }).json(course).status(202);
+    return res.set({ "x-organization": "Skyline" }).json(course).status(201);
   } catch (error) {
     console.log(error);
     next(error);
