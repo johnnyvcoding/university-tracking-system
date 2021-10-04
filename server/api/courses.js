@@ -59,7 +59,7 @@ router.get("/:courseId", async (req, res, next) => {
 });
 
 //delete course based on id
-router.delete("/:couirseId", async (req, res, next) => {
+router.delete("/:courseId", async (req, res, next) => {
   try {
     let { courseId } = req.params;
 
