@@ -83,6 +83,40 @@ router.post("/", async (req, res, next) => {
   }
 });
 
+
+router.post("/:courseId/add-course", async (req, res, next) => {
+  try {
+    let { studentId } = req.body;
+
+    let { courseId } = req.params;
+    let course = await Course.findOne({ where: { courseId: courseId } });
+
+    // verifies that an Id number is passed
+    if (isNaN(studentId))
+      return res
+        .set({ "x-organization": "Skyline" })
+        .json({ message: "Invald Student" })
+        .status(400);
+
+    // this is a sequelize "magic" method
+    await course.addStudent([studentId]);
+
+  
+    if (!course) {
+      return res
+        .set({ "x-organization": "Skyline" })
+        .json({ message: "Course was not found" })
+        .status(404);
+    }
+
+    return res.set({ "x-organization": "Skyline" }).json(course).status(201);
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+});
+
+
 //update course based on it
 router.put("/:courseId", async (req, res, next) => {
   try {
