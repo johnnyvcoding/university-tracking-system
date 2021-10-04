@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { Student } = require("../db/models");
+const { Student, Course, Professor } = require("../db/models");
 
 function studentQuerySearch() {}
 
@@ -40,6 +40,39 @@ router.get("/:studentId", async (req, res, next) => {
       : res
           .set({ "x-organization": "Skyline" })
           .json({ message: "Student was not found" })
+          .status(404);
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+});
+
+// get a single student classes based on its id
+router.get("/:studentId/courses", async (req, res, next) => {
+  try {
+    let { studentId } = req.params;
+
+    let studentCourses = await Student.findOne({
+      where: {
+        studentId: studentId,
+      },
+      include: [
+        // will bring all courses that belong to 'this' user
+        // and will join table with professors
+        {
+          model: Course,
+          include: Professor,
+        },
+      ],
+    });
+
+    // if student exists, then return a message
+    // else return a message
+    return studentCourses
+      ? res.set({ "x-organization": "Skyline" }).json(studentCourses).status(200)
+      : res
+          .set({ "x-organization": "Skyline" })
+          .json({ message: "Student's courses were not found" })
           .status(404);
   } catch (error) {
     console.log(error);
@@ -117,7 +150,6 @@ router.put("/:studentId", async (req, res, next) => {
   }
 });
 
-
 router.post("/", async (req, res, next) => {
   try {
     let {
@@ -135,10 +167,8 @@ router.post("/", async (req, res, next) => {
       dateOfBirth: dateOfBirth,
       address: address,
       enrollmentDate: enrollmentDate,
-      enrollmentStatus: enrollmentStatus
+      enrollmentStatus: enrollmentStatus,
     });
-
-
 
     return res.set({ "x-organization": "Skyline" }).json(student).status(202);
   } catch (error) {
