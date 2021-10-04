@@ -69,7 +69,10 @@ router.get("/:studentId/courses", async (req, res, next) => {
     // if student exists, then return a message
     // else return a message
     return studentCourses
-      ? res.set({ "x-organization": "Skyline" }).json(studentCourses).status(200)
+      ? res
+          .set({ "x-organization": "Skyline" })
+          .json(studentCourses)
+          .status(200)
       : res
           .set({ "x-organization": "Skyline" })
           .json({ message: "Student's courses were not found" })
@@ -169,6 +172,37 @@ router.post("/", async (req, res, next) => {
       enrollmentDate: enrollmentDate,
       enrollmentStatus: enrollmentStatus,
     });
+
+    return res.set({ "x-organization": "Skyline" }).json(student).status(201);
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+});
+
+router.post("/:studentId/add-course", async (req, res, next) => {
+  try {
+    let { courseId } = req.body;
+
+    let { studentId } = req.params;
+    let student = await Student.findOne({ where: { studentId: studentId } });
+
+    // verifies that an Id number is passed
+    if (isNaN(courseId))
+      return res
+        .set({ "x-organization": "Skyline" })
+        .json({ message: "Invald Course" })
+        .status(400);
+
+    await student.addCourse([courseId]);
+
+  
+    if (!student) {
+      return res
+        .set({ "x-organization": "Skyline" })
+        .json({ message: "Student was not found" })
+        .status(404);
+    }
 
     return res.set({ "x-organization": "Skyline" }).json(student).status(201);
   } catch (error) {
