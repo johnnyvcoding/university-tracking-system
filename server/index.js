@@ -31,6 +31,10 @@ const createApp = () => {
   // logging middleware
   app.use(morgan("dev"));
 
+  // body parsing middleware
+  app.use(express.json({}));
+  app.use(express.urlencoded({ extended: true }));
+
   // session middleware with passport
   app.use(
     session({
@@ -43,10 +47,9 @@ const createApp = () => {
   app.use(passport.initialize());
   app.use(passport.session());
 
-
   // auth and api routes
-  app.use("/auth", require("./auth"))
-  app.use("/api", require("./api"))
+  app.use("/auth", require("./auth"));
+  app.use("/api", require("./api"));
 
   // error handling endware
   app.use((err, req, res, next) => {
@@ -66,8 +69,8 @@ const startListening = () => {
 const syncDb = () => db.sync();
 
 async function bootApp() {
-  await sessionStore.sync()
-  await syncDb()
+  await sessionStore.sync();
+  await syncDb();
   await createApp();
   await startListening();
 }
