@@ -58,6 +58,41 @@ router.get("/:courseId", async (req, res, next) => {
   }
 });
 
+router.put("/:courseId", async (req, res, next) => {
+  try {
+    let { courseId } = req.params;
+    let { name, courseCode, description, startDate, endDate, professorId } =
+      req.body;
+
+    let course = await Course.findOne({
+      where: {
+        courseId: courseId,
+      },
+    });
+
+    if (!course) {
+      return res
+        .set({ "x-organization": "Skyline" })
+        .json({ message: "Course was not found" })
+        .status(404);
+    }
+
+    name ? (course.name = name) : null;
+    courseCode ? (course.courseCode = courseCode) : null;
+    description ? (course.description = description) : null;
+    startDate ? (course.startDate = startDate) : null;
+    endDate ? (course.endDate = endDate) : null;
+    professorId ? (course.professorId = professorId) : null;
+
+    await course.save();
+
+    return res.set({ "x-organization": "Skyline" }).json(course).status(202);
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+});
+
 //delete course based on id
 router.delete("/:courseId", async (req, res, next) => {
   try {
@@ -74,7 +109,7 @@ router.delete("/:courseId", async (req, res, next) => {
 
     // if course exists, then return a message
     // else return a message
-    return student
+    return course
       ? res.set({ "x-organization": "Skyline" }).json(course).status(202)
       : res
           .set({ "x-organization": "Skyline" })
