@@ -93,7 +93,7 @@ router.post("/", async (req, res, next) => {
 router.put("/:professorId", async (req, res, next) => {
   try {
     let { professorId } = req.params;
-    let { firstName, lastName, dateOfBirth, address, email, professorId } =
+    let { firstName, lastName, dateOfBirth, address, email } =
       req.body;
 
     let professor = await Professor.findOne({
