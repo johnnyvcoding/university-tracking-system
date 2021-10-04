@@ -39,13 +39,15 @@ router.get("/:studentId", async (req, res, next) => {
       ? res.set({ "x-organization": "Skyline" }).json(student).status(200)
       : res
           .set({ "x-organization": "Skyline" })
-          .json({ message: "Student was not found" }).status(404);
+          .json({ message: "Student was not found" })
+          .status(404);
   } catch (error) {
     console.log(error);
     next(error);
   }
 });
 
+//delete student based on id
 router.delete("/:studentId", async (req, res, next) => {
   try {
     let { studentId } = req.params;
@@ -65,7 +67,8 @@ router.delete("/:studentId", async (req, res, next) => {
       ? res.set({ "x-organization": "Skyline" }).json(student).status(202)
       : res
           .set({ "x-organization": "Skyline" })
-          .json({ message: "Student was not found" }).status(404);
+          .json({ message: "Student was not found" })
+          .status(404);
   } catch (error) {
     console.log(error);
     next(error);
