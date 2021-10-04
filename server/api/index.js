@@ -5,6 +5,7 @@ module.exports = router
 router.use("/students", require("./students"))
 router.use("/courses", require("./courses"))
 router.use("/professors", require("./professors"))
+router.use("/student-courses", require("./student-courses"))
 
 
 
