@@ -1,17 +1,10 @@
 const router = require("express").Router();
 const { Student } = require("../db/models");
 
-router.get("/", async (req, res, next) => {
-  try {
-    let students = await Student.findAll({});
+function studentQuerySearch() {}
 
-    return res.json(students);
-  } catch (error) {
-    console.log(error);
-    next(error);
-  }
-});
 
+// get students based on their first and last name
 router.get("/", async (req, res, next) => {
   try {
     let { firstName, lastName } = req.query;
@@ -19,11 +12,14 @@ router.get("/", async (req, res, next) => {
     let students = await Student.findAll({
       where: {
         firstName: firstName,
-        lastName: lastName,
+        lastName:  lastName 
       },
     });
 
-    return res.json(students);
+    return res
+      .set({ "x-organization": "Skyline" })
+      .json(students)
+      .status(200);
   } catch (error) {
     console.log(error);
     next(error);
