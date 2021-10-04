@@ -1,10 +1,9 @@
 const router = require("express").Router();
 const { Course } = require("../db/models");
 
-
 // this function will return all the query strings that were present
 // this makes dynamic searching much easier in case we dont have
-// all the paramaters 
+// all the paramaters
 /* 
 example /?firstName=John 
     the func will only return an object with the following:
@@ -53,6 +52,34 @@ router.get("/:courseId", async (req, res, next) => {
     }
 
     return res.set({ "x-organization": "Skyline" }).json(course).status(200);
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+});
+
+//delete course based on id
+router.delete("/:couirseId", async (req, res, next) => {
+  try {
+    let { courseId } = req.params;
+
+    let course = await Course.findOne({
+      where: {
+        courseId: courseId,
+      },
+    });
+
+    // destroy record if course exists
+    course ? await course.destroy() : null;
+
+    // if course exists, then return a message
+    // else return a message
+    return student
+      ? res.set({ "x-organization": "Skyline" }).json(course).status(202)
+      : res
+          .set({ "x-organization": "Skyline" })
+          .json({ message: "Course was not found" })
+          .status(404);
   } catch (error) {
     console.log(error);
     next(error);
