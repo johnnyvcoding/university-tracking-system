@@ -58,6 +58,32 @@ router.get("/:courseId", async (req, res, next) => {
   }
 });
 
+
+//create a course
+router.post("/", async (req, res, next) => {
+  try {
+    let { name, courseCode, description, startDate, endDate, professorId } =
+      req.body;
+
+    let course = await Course.create({
+      where: {
+        name,
+        courseCode,
+        description,
+        startDate,
+        endDate,
+        professorId,
+      },
+    });
+
+    return res.set({ "x-organization": "Skyline" }).json(course).status(202);
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+});
+
+//update course based on it
 router.put("/:courseId", async (req, res, next) => {
   try {
     let { courseId } = req.params;
