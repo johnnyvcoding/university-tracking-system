@@ -117,4 +117,34 @@ router.put("/:studentId", async (req, res, next) => {
   }
 });
 
+
+router.post("/", async (req, res, next) => {
+  try {
+    let {
+      firstName,
+      lastName,
+      dateOfBirth,
+      address,
+      enrollmentStatus,
+      enrollmentDate,
+    } = req.body;
+
+    let student = await Student.create({
+      firstName: firstName,
+      lastName: lastName,
+      dateOfBirth: dateOfBirth,
+      address: address,
+      enrollmentDate: enrollmentDate,
+      enrollmentStatus: enrollmentStatus
+    });
+
+
+
+    return res.set({ "x-organization": "Skyline" }).json(student).status(202);
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+});
+
 module.exports = router;
