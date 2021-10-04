@@ -36,7 +36,8 @@ Apikey.encryptKey = function (text, salt) {
   return crypto
     .createHash("RSA-SHA256")
     .update(text)
-    .update(salt.digest("Hex"));
+    .update(salt)
+    .digest("Hex");
 };
 
 const setSaltAndPassword = (key) => {
