@@ -28,12 +28,6 @@ const Course = db.define("Course", {
       isDate: true,
     },
   },
-  email: {
-    type: Sequelize.TEXT,
-    validate: {
-      isEmail: true,
-    },
-  },
 });
 
 module.exports = Course;
