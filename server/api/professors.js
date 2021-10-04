@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { Professor } = require("../db/models");
+const { Professor, Course, Student } = require("../db/models");
 
 // this function will return all the query strings that were present
 // this makes dynamic searching much easier in case we dont have
@@ -65,6 +65,38 @@ router.get("/:professorId", async (req, res, next) => {
   }
 });
 
+router.get("/:professorId/courses", async (req, res, next) => {
+  try {
+    let { professorId } = req.params;
+    let professorCourses = await Professor.findOne({
+      where: { professorId: professorId },
+      include: [
+        // 'this' will return a single professor with its courses and the students
+        // in the courses
+        {
+          model: Course,
+          include: Student,
+        },
+      ],
+    });
+
+    if (!professorCourses) {
+      return res
+        .set({ "x-organization": "Skyline" })
+        .json({ message: "Professor courses were not found" })
+        .status(404);
+    }
+
+    return res
+      .set({ "x-organization": "Skyline" })
+      .json(professorCourses)
+      .status(200);
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+});
+
 //create a course
 router.post("/", async (req, res, next) => {
   try {
@@ -93,8 +125,7 @@ router.post("/", async (req, res, next) => {
 router.put("/:professorId", async (req, res, next) => {
   try {
     let { professorId } = req.params;
-    let { firstName, lastName, dateOfBirth, address, email } =
-      req.body;
+    let { firstName, lastName, dateOfBirth, address, email } = req.body;
 
     let professor = await Professor.findOne({
       where: {
