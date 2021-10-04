@@ -75,4 +75,46 @@ router.delete("/:studentId", async (req, res, next) => {
   }
 });
 
+//update a student's data
+router.put("/:studentId", async (req, res, next) => {
+  try {
+    let { studentId } = req.params;
+    let {
+      firstName,
+      lastName,
+      dateOfBirth,
+      address,
+      enrollmentStatus,
+      enrollmentDate,
+    } = req.body;
+
+    let student = await Student.findOne({
+      where: {
+        studentId: studentId,
+      },
+    });
+
+    if (!student)
+      return res
+        .set({ "x-organization": "Skyline" })
+        .json({ message: "Student was not found" })
+        .status(404);
+
+    // update student's field if properties exists
+    firstName ? (student.firstName = firstName) : null;
+    lastName ? (student.lastName = lastName) : null;
+    dateOfBirth ? (student.dateOfBirth = dateOfBirth) : null;
+    address ? (student.address = address) : null;
+    enrollmentStatus ? (student.enrollmentStatus = enrollmentStatus) : null;
+    enrollmentDate ? (student.enrollmentDate = enrollmentDate) : null;
+
+    await student.save();
+
+    return res.set({ "x-organization": "Skyline" }).json(student).status(202);
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+});
+
 module.exports = router;
