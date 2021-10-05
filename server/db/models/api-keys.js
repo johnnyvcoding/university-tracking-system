@@ -25,7 +25,7 @@ const Apikey = db.define("Apikey", {
 });
 
 Apikey.prototype.correctKey = function (candidateKey) {
-  return Apikey.encryptKey(candidateKey, this.salt()) === this.password();
+  return Apikey.encryptKey(candidateKey, this.salt()) === this.key();
 };
 
 Apikey.generateSalt = function () {
@@ -37,7 +37,7 @@ Apikey.encryptKey = function (text, salt) {
     .createHash("RSA-SHA256")
     .update(text)
     .update(salt)
-    .digest("Hex");
+    .digest("hex");
 };
 
 const setSaltAndPassword = (key) => {
