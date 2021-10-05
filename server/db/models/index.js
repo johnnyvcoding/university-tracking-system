@@ -6,10 +6,10 @@ const Professor = require("./professor");
 const Course = require("./course");
 const User = require("./user");
 const StudentCourse = require("./student-course");
-const Exam = require("./exam")
+const Exam = require("./exam");
+const StudentExam = require("./student-exam")
 
-
-const Apikey = require("./api-keys")
+const Apikey = require("./api-keys");
 // 1 to many relationship
 Professor.hasMany(Course, {
   foreignKey: {
@@ -22,7 +22,7 @@ Course.belongsTo(Professor, {
   },
 });
 
-// many to many relationship 
+// many to many relationship
 Course.belongsToMany(Student, {
   through: StudentCourse,
   foreignKey: {
@@ -37,14 +37,36 @@ Student.belongsToMany(Course, {
 });
 
 // one to many relationship
-Exam.belongsTo(Course)
-Course.hasMany(Exam)
+Exam.belongsTo(Course, {
+  foreignKey: {
+    name: "courseId",
+  },
+});
+Course.hasMany(Exam, {
+  foreignKey: {
+    name: "courseId",
+  },
+});
+
+
+// many to many relationship
+Student.belongsToMany(Exam, {
+  through: StudentExam,
+  foreignKey: {
+    name: "studentId"
+  }
+})
+Exam.belongsToMany(Student, {
+  through: StudentExam,
+  foreignKey: {
+    name: "examId"
+  }
+})
 
 // one to one relationship
 // helps with track of who owns the key
-User.hasOne(Apikey)
-Apikey.belongsTo(User)
-
+User.hasOne(Apikey);
+Apikey.belongsTo(User);
 
 module.exports = {
   Student,
@@ -52,5 +74,5 @@ module.exports = {
   Course,
   User,
   StudentCourse,
-  Apikey
+  Apikey,
 };
