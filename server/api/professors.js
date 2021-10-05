@@ -97,7 +97,7 @@ router.get("/:professorId/courses", async (req, res, next) => {
   }
 });
 
-//create a course
+//create a professor
 router.post("/", async (req, res, next) => {
   try {
     let { firstName, lastName, dateOfBirth, address, email, professorId } =
