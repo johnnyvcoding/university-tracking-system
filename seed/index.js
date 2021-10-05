@@ -9,6 +9,7 @@ const {
   Apikey,
 } = require("../server/db/models");
 const Exam = require("../server/db/models/exam");
+const StudentExam = require("../server/db/models/student-exam");
 
 async function seed() {
   await db.sync({ force: true });
@@ -75,10 +76,31 @@ async function seed() {
     through: {
       studentPoints: 15,
       // prevents weird decimals like .92100110293222^...
-      grade: parseFloat(15/testOne.points).toPrecision(12),
-      completionDate: moment(new Date()).format('YYYY-MM-DD')
+      grade: parseFloat(15 / testOne.points).toPrecision(12),
+      completionDate: moment(new Date()).format("YYYY-MM-DD"),
     },
   });
+
+  // should return an array of exam grades for the given course
+  const studentOneExams = await StudentExam.findAll({
+    where: {
+      studentId: studentOne.studentId,
+      courseId: courseOne.courseId,
+    },
+  });
+
+  let result = calculateGrades(studentOneExams)
+  console.log("res back", result)
+}
+
+function calculateGrades(gradesArray) {
+  let grade = 0;
+  for (let i = 0; i < gradesArray.length; i++) {
+    grade = grade + parseFloat(gradesArray[i].grade);
+  }
+
+  return parseFloat(grade/gradesArray.length)
+  
 }
 
 async function runSeed() {

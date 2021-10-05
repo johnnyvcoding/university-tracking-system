@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { Student, Course, Professor } = require("../db/models");
+const { Student, Course, Professor, StudentCourse } = require("../db/models");
 const Exam = require("../db/models/exam");
 const StudentExam = require("../db/models/student-exam");
 
@@ -118,31 +118,18 @@ router.get("/:studentId/course-grades", async (req, res, next) => {
   try {
     let { studentId } = req.params;
 
-    let studentCourses = await Student.findOne({
-      where: {
-        studentId: studentId,
-      },
+    let studentCourses = await Course.findAll({
+      
       include: [
-        // will bring all courses that belong to 'this' user
-        // and will join table with professors
         {
-          model: Course,
-          include: [
-            {
-              model: Exam,
-              include: [
-                {
-                  model: Student,
-                  where: {
-                    studentId: studentId,
-                  },
-                },
-              ],
-            },
-          ],
-        },
-      ],
+          model: Student,
+          where: {
+            studentId: studentId
+          },
+        }
+      ]
     });
+
 
     // if student exists, then return a message
     // else return a message
