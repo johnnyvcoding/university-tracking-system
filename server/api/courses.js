@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { Course } = require("../db/models");
+const { Course, Student } = require("../db/models");
 const Exam = require("../db/models/exam");
 
 // this function will return all the query strings that were present
@@ -86,6 +86,43 @@ router.get("/:courseId/exams", async (req, res, next) => {
     next(error);
   }
 });
+
+router.get("/:courseId/student-exams", async (req, res, next) => {
+  try {
+    let { courseId } = req.params;
+
+    // will join table where records match for students and exams
+    // in summary: this will return the students along with the exam sccores for the class
+    let course = await Course.findOne({
+      where: { courseId: courseId },
+      include: [{
+        model: Student,
+        include: [{
+          model: Exam,
+          where: {
+            courseId: courseId
+          }
+        }]
+      }],
+    });
+
+    if (!course) {
+      return res
+        .set({ "x-organization": "Skyline" })
+        .json({ message: "Course was not found" })
+        .status(404);
+    }
+
+    return res
+      .set({ "x-organization": "Skyline", "Content-Type": "application/json" })
+      .json(course)
+      .status(200);
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+});
+
 
 //create a course
 router.post("/", async (req, res, next) => {
