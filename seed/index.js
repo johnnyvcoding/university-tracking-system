@@ -54,11 +54,14 @@ async function seed() {
       .join("");
   }
 
-  let keyReturned = generateKey()
-  console.log("this is the key: ", keyReturned)
+  let keyReturned = generateKey();
+
+  console.log("this is the key: ", keyReturned);
   const keyOne = await Apikey.create({
-    key: keyReturned
+    key: keyReturned,
   });
+
+  await userOne.setApikey(keyOne);
 }
 
 async function runSeed() {
