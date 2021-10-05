@@ -1,18 +1,28 @@
 const router = require("express").Router();
 const { Student, Course, Professor } = require("../db/models");
 
-function studentQuerySearch() {}
+function returnSearchQueryObject(query) {
+  let queryObj = {};
+
+  query.firstName ? (queryObj.firstName = query.firstName) : null;
+  query.lastName ? (queryObj.lastName = query.lastName) : null;
+  query.dateOfBirth ? (queryObj.dateOfBirth = query.dateOfBirth) : null;
+  query.address ? (queryObj.address = query.address) : null;
+  query.enrollmentStatus
+    ? (queryObj.enrollmentStatus = query.enrollmentStatus)
+    : null;
+  query.enrollmentDate
+    ? (queryObj.enrollmentDate = query.enrollmentDate)
+    : null;
+
+  return queryObj;
+}
 
 // get students based on their first and last name
 router.get("/", async (req, res, next) => {
   try {
-    let { firstName, lastName } = req.query;
-
     let students = await Student.findAll({
-      where: {
-        firstName: firstName,
-        lastName: lastName,
-      },
+      where: returnSearchQueryObject(req.query),
     });
 
     return res.set({ "x-organization": "Skyline" }).json(students).status(200);
@@ -196,7 +206,6 @@ router.post("/:studentId/add-course", async (req, res, next) => {
 
     await student.addCourse([courseId]);
 
-  
     if (!student) {
       return res
         .set({ "x-organization": "Skyline" })
