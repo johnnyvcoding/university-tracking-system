@@ -1,11 +1,6 @@
 const router = require("express").Router();
 const { Apikey, User } = require("../db/models");
-const crypto = require("crypto");
 
-// const algorithm = "RSA-SHA256"
-// const securityKey = crypto.randomBytes(16).toString("base64")
-// const vectorKey = crypto.randomBytes(16)
-// const decipher = crypto.createDecipheriv(algorithm, securityKey, vectorKey)
 
 function generateKey() {
   //creates a base 36 string character
