@@ -118,18 +118,12 @@ router.get("/:studentId/course-grades", async (req, res, next) => {
   try {
     let { studentId } = req.params;
 
-    let studentCourses = await Course.findAll({
-      
-      include: [
-        {
-          model: Student,
-          where: {
-            studentId: studentId
-          },
+    // should return the student's courses along with the grades
+    let studentCourses = await StudentCourse.findAll({
+        where: {
+          studentId: studentId
         }
-      ]
     });
-
 
     // if student exists, then return a message
     // else return a message
