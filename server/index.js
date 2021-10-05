@@ -13,6 +13,9 @@ const session = require("express-session");
 const SequelizeStore = require("connect-session-sequelize")(session.Store);
 
 const sessionStore = new SequelizeStore({ db });
+
+const {verifyKey} = require("./middleware")
+
 const PORT = process.env.PORT || 8080;
 
 // passport registration
@@ -49,7 +52,7 @@ const createApp = () => {
 
   // auth and api routes
   app.use("/auth", require("./auth"));
-  app.use("/api", require("./api"));
+  app.use("/api", verifyKey, require("./api"));
 
   // error handling endware
   app.use((err, req, res, next) => {
