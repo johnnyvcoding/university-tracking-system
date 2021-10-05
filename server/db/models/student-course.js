@@ -8,6 +8,10 @@ const StudentCourse = db.define("StudentCourse", {
     autoIncrement: true,
     allowNull: false,
   },
+  grade: {
+    type: Sequelize.DECIMAL(10,2),
+    default: 0
+  }
 });
 
 
