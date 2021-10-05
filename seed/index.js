@@ -8,6 +8,7 @@ const {
   Professor,
   Apikey,
 } = require("../server/db/models");
+const Exam = require("../server/db/models/exam");
 
 async function seed() {
   await db.sync({ force: true });
@@ -62,6 +63,22 @@ async function seed() {
   });
 
   await userOne.setApikey(keyOne);
+
+  const testOne = await Exam.create({
+    name: "Factoring",
+    points: 50,
+  });
+
+  await courseOne.addExam(testOne);
+  //student one got 15 points on the test
+  await studentOne.addExam(testOne, {
+    through: {
+      studentPoints: 15,
+      // prevents weird decimals like .92100110293222^...
+      grade: parseFloat(15/testOne.points).toPrecision(12),
+      completionDate: moment(new Date()).format('YYYY-MM-DD')
+    },
+  });
 }
 
 async function runSeed() {
