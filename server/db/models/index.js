@@ -6,6 +6,9 @@ const Professor = require("./professor");
 const Course = require("./course");
 const User = require("./user");
 const StudentCourse = require("./student-course");
+const Exam = require("./exam")
+
+
 const Apikey = require("./api-keys")
 // 1 to many relationship
 Professor.hasMany(Course, {
@@ -32,6 +35,10 @@ Student.belongsToMany(Course, {
     name: "studentId",
   },
 });
+
+// one to many relationship
+Exam.belongsTo(Course)
+Course.hasMany(Exam)
 
 // one to one relationship
 // helps with track of who owns the key

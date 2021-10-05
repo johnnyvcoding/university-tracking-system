@@ -31,4 +31,4 @@ const Exam = db.define("Exam", {
   },
 });
 
-module.exports = Course;
+module.exports = Exam;
