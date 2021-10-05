@@ -55,7 +55,10 @@ router.get("/:courseId", async (req, res, next) => {
         .status(404);
     }
 
-    return res.set({ "x-organization": "Skyline", "Content-Type": "application/json" }).json(course).status(200);
+    return res
+      .set({ "x-organization": "Skyline", "Content-Type": "application/json" })
+      .json(course)
+      .status(200);
   } catch (error) {
     console.log(error);
     next(error);
@@ -72,7 +75,10 @@ router.get("/:courseId/exams", async (req, res, next) => {
 
     if (!course) {
       return res
-        .set({ "x-organization": "Skyline", "Content-Type": "application/json" })
+        .set({
+          "x-organization": "Skyline",
+          "Content-Type": "application/json",
+        })
         .json({ message: "Course was not found" })
         .status(404);
     }
@@ -95,20 +101,27 @@ router.get("/:courseId/student-exams", async (req, res, next) => {
     // in summary: this will return the students along with the exam sccores for the class
     let course = await Course.findOne({
       where: { courseId: courseId },
-      include: [{
-        model: Student,
-        include: [{
-          model: Exam,
-          where: {
-            courseId: courseId
-          }
-        }]
-      }],
+      include: [
+        {
+          model: Student,
+          include: [
+            {
+              model: Exam,
+              where: {
+                courseId: courseId,
+              },
+            },
+          ],
+        },
+      ],
     });
 
     if (!course) {
       return res
-        .set({ "x-organization": "Skyline", "Content-Type": "application/json" })
+        .set({
+          "x-organization": "Skyline",
+          "Content-Type": "application/json",
+        })
         .json({ message: "Course was not found" })
         .status(404);
     }
@@ -123,7 +136,6 @@ router.get("/:courseId/student-exams", async (req, res, next) => {
   }
 });
 
-
 //create a course
 router.post("/", async (req, res, next) => {
   try {
@@ -131,14 +143,12 @@ router.post("/", async (req, res, next) => {
       req.body;
 
     let course = await Course.create({
-      where: {
-        name,
-        courseCode,
-        description,
-        startDate,
-        endDate,
-        professorId,
-      },
+      name,
+      courseCode,
+      description,
+      startDate,
+      endDate,
+      professorId,
     });
 
     return res
@@ -158,6 +168,16 @@ router.post("/:courseId/add-student", async (req, res, next) => {
     let { courseId } = req.params;
     let course = await Course.findOne({ where: { courseId: courseId } });
 
+    if (!course) {
+      return res
+        .set({
+          "x-organization": "Skyline",
+          "Content-Type": "application/json",
+        })
+        .json({ message: "Course was not found" })
+        .status(404);
+    }
+
     // verifies that an Id number is passed
     if (isNaN(studentId))
       return res
@@ -170,16 +190,6 @@ router.post("/:courseId/add-student", async (req, res, next) => {
 
     // this is a sequelize "magic" method
     await course.addStudent([studentId]);
-
-    if (!course) {
-      return res
-        .set({
-          "x-organization": "Skyline",
-          "Content-Type": "application/json",
-        })
-        .json({ message: "Course was not found" })
-        .status(404);
-    }
 
     return res
       .set({ "x-organization": "Skyline", "Content-Type": "application/json" })
