@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const { Course } = require("../db/models");
+const Exam = require("../db/models/exam");
 
 // this function will return all the query strings that were present
 // this makes dynamic searching much easier in case we dont have
@@ -32,7 +33,10 @@ router.get("/", async (req, res, next) => {
       where: returnQueryParamsObject(req.query),
     });
 
-    return res.set({ "x-organization": "Skyline" }).json(courses).status(200);
+    return res
+      .set({ "x-organization": "Skyline", "Content-Type": "application/json" })
+      .json(courses)
+      .status(200);
   } catch (error) {
     console.log(error);
     next(error);
@@ -58,6 +62,30 @@ router.get("/:courseId", async (req, res, next) => {
   }
 });
 
+router.get("/:courseId/exams", async (req, res, next) => {
+  try {
+    let { courseId } = req.params;
+    let course = await Course.findOne({
+      where: { courseId: courseId },
+      include: [Exam],
+    });
+
+    if (!course) {
+      return res
+        .set({ "x-organization": "Skyline" })
+        .json({ message: "Course was not found" })
+        .status(404);
+    }
+
+    return res
+      .set({ "x-organization": "Skyline", "Content-Type": "application/json" })
+      .json(course)
+      .status(200);
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+});
 
 //create a course
 router.post("/", async (req, res, next) => {
@@ -76,13 +104,15 @@ router.post("/", async (req, res, next) => {
       },
     });
 
-    return res.set({ "x-organization": "Skyline" }).json(course).status(201);
+    return res
+      .set({ "x-organization": "Skyline", "Content-Type": "application/json" })
+      .json(course)
+      .status(201);
   } catch (error) {
     console.log(error);
     next(error);
   }
 });
-
 
 router.post("/:courseId/add-course", async (req, res, next) => {
   try {
@@ -94,28 +124,35 @@ router.post("/:courseId/add-course", async (req, res, next) => {
     // verifies that an Id number is passed
     if (isNaN(studentId))
       return res
-        .set({ "x-organization": "Skyline" })
+        .set({
+          "x-organization": "Skyline",
+          "Content-Type": "application/json",
+        })
         .json({ message: "Invald Student" })
         .status(400);
 
     // this is a sequelize "magic" method
     await course.addStudent([studentId]);
 
-  
     if (!course) {
       return res
-        .set({ "x-organization": "Skyline" })
+        .set({
+          "x-organization": "Skyline",
+          "Content-Type": "application/json",
+        })
         .json({ message: "Course was not found" })
         .status(404);
     }
 
-    return res.set({ "x-organization": "Skyline" }).json(course).status(201);
+    return res
+      .set({ "x-organization": "Skyline", "Content-Type": "application/json" })
+      .json(course)
+      .status(201);
   } catch (error) {
     console.log(error);
     next(error);
   }
 });
-
 
 //update course based on it
 router.put("/:courseId", async (req, res, next) => {
@@ -132,7 +169,10 @@ router.put("/:courseId", async (req, res, next) => {
 
     if (!course) {
       return res
-        .set({ "x-organization": "Skyline" })
+        .set({
+          "x-organization": "Skyline",
+          "Content-Type": "application/json",
+        })
         .json({ message: "Course was not found" })
         .status(404);
     }
@@ -146,7 +186,10 @@ router.put("/:courseId", async (req, res, next) => {
 
     await course.save();
 
-    return res.set({ "x-organization": "Skyline" }).json(course).status(202);
+    return res
+      .set({ "x-organization": "Skyline", "Content-Type": "application/json" })
+      .json(course)
+      .status(202);
   } catch (error) {
     console.log(error);
     next(error);
@@ -170,9 +213,18 @@ router.delete("/:courseId", async (req, res, next) => {
     // if course exists, then return a message
     // else return a message
     return course
-      ? res.set({ "x-organization": "Skyline" }).json(course).status(202)
+      ? res
+          .set({
+            "x-organization": "Skyline",
+            "Content-Type": "application/json",
+          })
+          .json(course)
+          .status(202)
       : res
-          .set({ "x-organization": "Skyline" })
+          .set({
+            "x-organization": "Skyline",
+            "Content-Type": "application/json",
+          })
           .json({ message: "Course was not found" })
           .status(404);
   } catch (error) {
