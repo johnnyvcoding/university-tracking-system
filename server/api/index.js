@@ -6,6 +6,7 @@ router.use("/students", require("./students"))
 router.use("/courses", require("./courses"))
 router.use("/professors", require("./professors"))
 router.use("/student-courses", require("./student-courses"))
+router.use("/users", require("./users"))
 router.use("/api-keys", require("./api-keys"))
 
 
