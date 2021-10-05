@@ -151,7 +151,7 @@ router.post("/", async (req, res, next) => {
   }
 });
 
-router.post("/:courseId/add-course", async (req, res, next) => {
+router.post("/:courseId/add-student", async (req, res, next) => {
   try {
     let { studentId } = req.body;
 
