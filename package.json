@@ -5,10 +5,14 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start-dev": "nodemon server"
+    "start-server": "nodemon server",
+    "start": "node server",
+    "start-dev": "NODE_ENV='development' npm run start-server",
+    "start-production": "NODE_ENV='production' npm run start",
+    "seed": "node seed"
   },
   "keywords": [],
-  "author": "",
+  "author": "Johnny Vazquez",
   "license": "ISC",
   "dependencies": {
     "compression": "^1.7.4",
