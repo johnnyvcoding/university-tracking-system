@@ -85,7 +85,6 @@ async function seed() {
   const studentOneExams = await StudentExam.findAll({
     where: {
       studentId: studentOne.studentId,
-      courseId: courseOne.courseId,
     },
   });
 
