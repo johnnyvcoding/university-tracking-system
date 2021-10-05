@@ -63,6 +63,19 @@ Exam.belongsToMany(Student, {
   }
 })
 
+
+Course.hasMany(StudentExam, {
+  foreignKey: {
+    name: "courseId"
+  }
+})
+
+StudentExam.belongsTo(Course, {
+  foreignKey: {
+    name: "courseId"
+  }
+})
+
 // one to one relationship
 // helps with track of who owns the key
 User.hasOne(Apikey);
