@@ -55,7 +55,7 @@ router.get("/:courseId", async (req, res, next) => {
         .status(404);
     }
 
-    return res.set({ "x-organization": "Skyline" }).json(course).status(200);
+    return res.set({ "x-organization": "Skyline", "Content-Type": "application/json" }).json(course).status(200);
   } catch (error) {
     console.log(error);
     next(error);
@@ -72,7 +72,7 @@ router.get("/:courseId/exams", async (req, res, next) => {
 
     if (!course) {
       return res
-        .set({ "x-organization": "Skyline" })
+        .set({ "x-organization": "Skyline", "Content-Type": "application/json" })
         .json({ message: "Course was not found" })
         .status(404);
     }
@@ -108,7 +108,7 @@ router.get("/:courseId/student-exams", async (req, res, next) => {
 
     if (!course) {
       return res
-        .set({ "x-organization": "Skyline" })
+        .set({ "x-organization": "Skyline", "Content-Type": "application/json" })
         .json({ message: "Course was not found" })
         .status(404);
     }
