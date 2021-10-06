@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const { Course, Student } = require("../db/models");
 const Exam = require("../db/models/exam");
-
+const { assignStudentsExam } = require("./helper-functions");
 // this function will return all the query strings that were present
 // this makes dynamic searching much easier in case we dont have
 // all the paramaters
@@ -194,6 +194,43 @@ router.post("/:courseId/add-student", async (req, res, next) => {
     return res
       .set({ "x-organization": "Skyline", "Content-Type": "application/json" })
       .json(course)
+      .status(201);
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+});
+
+// add an exam to given course
+router.post("/:courseId/add-exam", async (req, res, next) => {
+  try {
+    let { name, points, description, assignedDate, deadlineDate } = req.body;
+    let { courseId } = req.params;
+
+    if (!courseId) {
+      return res
+        .set({
+          "x-organization": "Skyline",
+          "Content-Type": "application/json",
+        })
+        .json({ message: "Course was not found" })
+        .status(404);
+    }
+
+    let exam = await Exam.create({
+      name,
+      points,
+      assignedDate,
+      deadlineDate,
+      courseId,
+    });
+
+    // assign exam to all the students in the course
+    await assignStudentsExam(courseId, exam);
+
+    return res
+      .set({ "x-organization": "Skyline", "Content-Type": "application/json" })
+      .json(exam)
       .status(201);
   } catch (error) {
     console.log(error);
