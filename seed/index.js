@@ -30,22 +30,62 @@ async function seed() {
     isAdmin: true,
     email: "jdoe@mail.com",
     password: "123",
+    dateOfBirth: moment(new Date()).format("YYYY-MM-DD"),
+  });
+
+  const userTwo = await User.create({
+    firstName: "Josepeh",
+    lastName: "Gates",
+    isAdmin: true,
+
+    email: "jgates@mail.com",
+    password: "123",
+    dateOfBirth: moment(new Date()).format("YYYY-MM-DD"),
   });
 
   const professorOne = await Professor.create({
     firstName: "Chris",
     lastName: "Mallan",
     address: "33 Butrick St",
+    hireDate: moment(new Date()).format("YYYY-MM-DD"),
+    dateOfBirth: moment(new Date()).format("YYYY-MM-DD"),
+    email: "cmallan@mail.com",
   });
+
+
+  const professorTwo = await Professor.create({
+    firstName: "Katherine",
+    lastName: "Butera",
+    address: "1706 Greenwod Ave",
+    hireDate: moment(new Date()).format("YYYY-MM-DD"),
+    dateOfBirth: moment(new Date()).format("YYYY-MM-DD"),
+    email: "kbutera@mail.com",
+  });
+
 
   const courseOne = await Course.create({
     name: "Math 120",
+    courseCode: "192-AZU",
     description: "Algebra 2",
+    startDate: moment(new Date()).format("YYYY-MM-DD"),
+    endDate: "2022-10-30"
+
+  });
+
+  const courseTwo = await Course.create({
+    name: "Ancient Civs",
+    courseCode: "192-HSU",
+    description: "Learn about ancient civilizations",
+    startDate: moment(new Date()).format("YYYY-MM-DD"),
+    endDate: "2022-11-30"
+
   });
 
   await professorOne.addCourse(courseOne);
+  await professorTwo.addCourse(courseTwo)
 
   await studentOne.addCourse(courseOne);
+  await studentOne.addCourse(courseTwo)
 
   function generateKey() {
     //creates a base 36 string character
@@ -58,12 +98,16 @@ async function seed() {
 
   let keyReturned = generateKey();
 
-  console.log("this is the key: ", keyReturned);
+  console.log("this is the key of user one: ", keyReturned);
   const keyOne = await Apikey.create({
     key: keyReturned,
   });
+  const keyTwo = await Apikey.create({
+    key: "hello-world",
+  });
 
   await userOne.setApikey(keyOne);
+  await userTwo.setApikey(keyTwo);
 
   const testOne = await Exam.create({
     name: "Factoring",
@@ -78,6 +122,7 @@ async function seed() {
       // prevents weird decimals like .92100110293222^...
       grade: parseFloat(15 / testOne.points).toPrecision(12),
       completionDate: moment(new Date()).format("YYYY-MM-DD"),
+      courseId: courseOne.courseId
     },
   });
 
@@ -88,8 +133,8 @@ async function seed() {
     },
   });
 
-  let result = calculateGrades(studentOneExams)
-  console.log("res back", result)
+  let result = calculateGrades(studentOneExams);
+  console.log("res back", result);
 }
 
 function calculateGrades(gradesArray) {
@@ -98,8 +143,7 @@ function calculateGrades(gradesArray) {
     grade = grade + parseFloat(gradesArray[i].grade);
   }
 
-  return parseFloat(grade/gradesArray.length)
-  
+  return parseFloat(grade / gradesArray.length);
 }
 
 async function runSeed() {
