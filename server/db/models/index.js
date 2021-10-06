@@ -88,4 +88,5 @@ module.exports = {
   User,
   StudentCourse,
   Apikey,
+  StudentExam
 };
