@@ -31,9 +31,9 @@ async function verifyKey(req, res, next) {
 
     if (!userKey) {
       return res
+        .status(403)
         .set({ "x-organization": "Skyline" })
         .json({ message: "User does not have access!" })
-        .status(403);
     }
 
     if (!userKey.correctKey(key)) {
