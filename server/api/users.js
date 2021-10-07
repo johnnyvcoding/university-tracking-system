@@ -8,23 +8,23 @@ router.delete("/:userId/api-key", async (req, res, next) => {
 
     if (!key) {
       res
+        .status(404)
         .set({
           "x-organization": "Skyline",
           "Content-Type": "application/json",
         })
         .json({ message: "USER DOES NOT HAVE A KEY" })
-        .status(404);
     }
 
     await key.destroy();
 
     return res
+      .status(202)
       .set({
         "x-organization": "Skyline",
         "Content-Type": "application/json",
       })
       .json({ message: "Key was deleted!" })
-      .status(202);
   } catch (error) {
     console.log(error);
     next(error);

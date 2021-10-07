@@ -35,9 +35,9 @@ router.get("/", async (req, res, next) => {
     });
 
     return res
+      .status(200)
       .set({ "x-organization": "Skyline", "Content-Type": "application/json" })
       .json(professors)
-      .status(200);
   } catch (error) {
     console.log(error);
     next(error);
@@ -53,9 +53,9 @@ router.get("/:professorId", async (req, res, next) => {
 
     if (!professor) {
       return res
+        .status(404)
         .set({ "x-organization": "Skyline", "Content-Type": "application/json" })
         .json({ message: "Professor was not found" })
-        .status(404);
     }
 
     return res.set({ "x-organization": "Skyline", "Content-Type": "application/json" }).json(professor).status(200);
@@ -82,15 +82,15 @@ router.get("/:professorId/courses", async (req, res, next) => {
 
     if (!professorCourses) {
       return res
+        .status(404)
         .set({ "x-organization": "Skyline", "Content-Type": "application/json" })
         .json({ message: "Professor courses were not found" })
-        .status(404);
     }
 
     return res
+      .status(200)
       .set({ "x-organization": "Skyline", "Content-Type": "application/json" })
       .json(professorCourses)
-      .status(200);
   } catch (error) {
     console.log(error);
     next(error);
@@ -114,7 +114,7 @@ router.post("/", async (req, res, next) => {
       
     });
 
-    return res.set({ "x-organization": "Skyline", "Content-Type": "application/json" }).json(professor).status(201);
+    return res.status(201).set({ "x-organization": "Skyline", "Content-Type": "application/json" }).json(professor)
   } catch (error) {
     console.log(error);
     next(error);
@@ -135,9 +135,9 @@ router.put("/:professorId", async (req, res, next) => {
 
     if (!professor) {
       return res
+        .status(404)
         .set({ "x-organization": "Skyline", "Content-Type": "application/json" })
         .json({ message: "Professor was not found" })
-        .status(404);
     }
 
     firstName ? (professor.firstName = firstName) : null;
@@ -150,7 +150,7 @@ router.put("/:professorId", async (req, res, next) => {
 
     await professor.save();
 
-    return res.set({ "x-organization": "Skyline" }).json(professor).status(202);
+    return res.status(202).set({ "x-organization": "Skyline", "Content-Type": "application/json" }).json(professor)
   } catch (error) {
     console.log(error);
     next(error);
@@ -174,11 +174,12 @@ router.delete("/:professorId", async (req, res, next) => {
     // if professor exists, then return a message
     // else return a message
     return professor
-      ? res.set({ "x-organization": "Skyline", "Content-Type": "application/json" }).json(professor).status(202)
+      ? res.status(202).set({ "x-organization": "Skyline", "Content-Type": "application/json" }).json(professor)
       : res
+          .status(404)
           .set({ "x-organization": "Skyline", "Content-Type": "application/json" })
           .json({ message: "Professor was not found" })
-          .status(404);
+          
   } catch (error) {
     console.log(error);
     next(error);

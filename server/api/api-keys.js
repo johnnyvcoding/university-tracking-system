@@ -19,9 +19,9 @@ router.post("/", async (req, res, next) => {
 
     if (!userId) {
       return res
+        .status(400)
         .set({ "x-organization": "Skyline" })
         .json({ message: "No user was selected" })
-        .status(400);
     }
 
     let generatedKey = generateKey();
@@ -33,9 +33,9 @@ router.post("/", async (req, res, next) => {
     });
 
     return res
+      .status(201)
       .set({ "x-organization": "Skyline", "Content-Type": "application/json" })
       .json({ api_key: generatedKey })
-      .status(201);
   } catch (error) {
     console.log(error);
     next(error);

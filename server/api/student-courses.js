@@ -6,9 +6,10 @@ router.get("/", async (req, res, next) => {
     let studentCourses = await StudentCourse.findAll();
 
     return res
+      .status(200)
       .set({ "x-organization": "Skyline" })
       .json(studentCourses)
-      .status(200);
+      
   } catch (error) {
     console.log(error);
     next(error);
@@ -28,13 +29,13 @@ router.delete("/:studentCourseId", async (req, res, next) => {
     // else return a message
     return studentCourseRecord
       ? res
+          .status(202)
           .set({ "x-organization": "Skyline" })
           .json(studentCourseRecord)
-          .status(202)
       : res
+          .status(404)
           .set({ "x-organization": "Skyline" })
           .json({ message: "Student record was not found" })
-          .status(404);
   } catch (error) {
     console.log(error);
     next(error);
@@ -52,9 +53,9 @@ router.post("/", async (req, res, next) => {
     });
 
     res
+      .status(201)
       .set({ "x-organization": "Skyline" })
       .json(studentCourseRecord)
-      .status(201);
   } catch (error) {
     console.log(errr);
     next(error);
