@@ -10,16 +10,17 @@ async function verifyKey(req, res, next) {
 
     if (!key) {
      return res
+        .status(401)
         .set({ "x-organization": "Skyline" })
-        .json({ message: "Api key was not found" })
-        .status(401);
+        .json({ message: "Api key was not found" });
     }
 
     if (!userId) {
       return res
+        .status(401)
         .set({ "x-organization": "Skyline" })
         .json({ message: "Please log in to be able to user our api service!" })
-        .status(401);
+        
     }
 
     let userKey = await Apikey.findOne({
@@ -37,9 +38,10 @@ async function verifyKey(req, res, next) {
 
     if (!userKey.correctKey(key)) {
       return res
+        .status(401)
         .set({ "x-organization": "Skyline" })
         .json({ message: "Incorrect key!" })
-        .status(401);
+        ;
     }
 
     next();
