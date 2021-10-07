@@ -9,14 +9,14 @@ async function verifyKey(req, res, next) {
     let userId = req.body.userId;
 
     if (!key) {
-      res
+     return res
         .set({ "x-organization": "Skyline" })
         .json({ message: "Api key was not found" })
         .status(401);
     }
 
     if (!userId) {
-      res
+      return res
         .set({ "x-organization": "Skyline" })
         .json({ message: "Please log in to be able to user our api service!" })
         .status(401);
